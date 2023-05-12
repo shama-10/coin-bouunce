@@ -5,7 +5,7 @@ const connectionString ="mongodb+srv://bugAuthor:ZBbDF6P32XYg9wz4@cluster0.m9tkt
 const dbConnect = async () => {
    try {
     const conn  = await mongoose.connect(connectionString);
-    console.log(`Database Connected to host:'${conn,connection.host}`);
+    console.log(`Database Connected to host:'${conn.connection.host}`);
 
    } catch (error) {
     console.log(`Error:${error}`);
@@ -13,6 +13,3 @@ const dbConnect = async () => {
 }
 
 module.exports = dbConnect;
-
-
-
