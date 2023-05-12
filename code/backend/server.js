@@ -7,6 +7,6 @@ const app = express();
 
 dbConnect();
 
-app.get('/',(req,res) => res.json({msg:'Hello World;'}));
+app.get('/',(req,res) => res.json({msg:'Hello World!'}));
 
 app.listen(PORT, console.log(`Backend is runnung on PORT: ${PORT} `));
