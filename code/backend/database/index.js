@@ -13,5 +13,4 @@ const dbConnect = async () => {
     console.log(`Error:${error}`);
    }
 }
-
 module.exports = dbConnect;
