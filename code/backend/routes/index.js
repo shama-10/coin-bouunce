@@ -6,7 +6,6 @@ const router = express.Router();
 router.get('/test',(req, res) => res.json({msg : 'Routes are working'}));
 
 //User
-
 //register
 router.post('/register', authController.register);
 //login
