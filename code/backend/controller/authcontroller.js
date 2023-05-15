@@ -9,11 +9,13 @@ const authController = {
             username : Joi.string().min(5).max(30).required(),
             name : Joi.string().max(30).required(),
             email : Joi.string().email().required(),
-            password : Joi.string().pattern(passwordPattern).required(),
+            password : Joi.string().required(),
             confirmPassword : Joi.ref('password')
         });
 
        const { error } = userRegisterSchema.validate(req.body);
+
+      // return res.status(400).json({message:error});
 
         //if error in Validation ->return error via middleware
         if(error){
