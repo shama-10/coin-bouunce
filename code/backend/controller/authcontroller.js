@@ -202,6 +202,70 @@ const authController = {
 
         //send response
         res.status(200).json({user : null, auth: false});
+    },
+    async refersh(req, res, next)
+    {
+        //1. get refershToken from cookies
+        //2. Varify refershToken
+        //3. generate new tokens
+        //4. update db, return respose
+
+        const orignalRefershToken = req.cookies.refershToken;
+        
+        let id;
+        try{
+           id = JWTService.verifyRefershToken(orignalRefershToken)._id;
+        }
+        
+        catch(e){
+            const error = {
+                status: 401,
+                message : 'Unauthorized1'
+            }
+            return next(error);
+        }
+        try{
+            const match = RefershToken.findOne({_id: id, token: orignalRefershToken});
+            if(!match){
+                const error = {
+                    status : 401,
+                    message : 'Unauthorized2'
+                }
+                return next(error);
+            }
+        }
+        catch(e){
+            return next(e);
+        }
+        //3. generate new tokens
+        try {
+            
+            const accessToken = JWTService.signAccessToken({_id : id}, '30m');
+             const refershToken =  JWTService.signRefershToken({_id : id}, '60m');
+
+             await RefershToken.updateOne({_id: id}, {token: refershToken});
+
+              //send tokens in cookie
+        res.cookie('accessToken', accessToken,{
+            maxAge : 1000 * 60 * 60 * 24,
+            httpOnly: true
+        });
+
+        res.cookie('refershToken', refershToken,{
+            maxAge : 1000 * 60 * 60 * 24,
+            httpOnly: true
+        });
+
+
+        } catch (e) {
+           return next(e); 
+        }
+
+        const user = await User.findOne({_id: id});
+        
+        const userDto = new UserDTO(user);
+
+        return res.status(200).json({user: userDto, auth:true });
     }
 }
 module.exports = authController;

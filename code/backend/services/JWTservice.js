@@ -20,8 +20,8 @@ class JWTService{
     }
 
     //verify Refersh Token
-    static verifyrefershToken(token){
-        return jwt.verify(token, ACCESS_TOKEN_SECRET);
+    static verifyRefershToken(token){
+        return jwt.verify(token, REFERSH_TOKEN_SECRET);
     }
 
     //Store refersh token
