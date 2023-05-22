@@ -85,7 +85,36 @@ const blogController = {
             return next(error);
         }
     },
-    async getById(req, res, next){},
+    async getById(req, res, next){
+        //validate id
+        //respose
+
+        const getByIdSchema = Joi.object({
+
+            id: Joi.string().regex(mongodbIdPattern).required()
+        });
+        
+        const {error} = getByIdSchema.validate(req.params);
+
+        if(error){
+            return next(error);
+        }
+
+        let blog;
+        const {id} =req.params;
+
+        try {
+            blog = await Blog.findOne({_id: id});
+        } 
+        catch (error) {
+            return next(error);
+        }
+
+        const blogDto = new BlogDTO(blog);
+
+        return res.status(200).json({blog: blogDto})
+
+    },
     async update(req, res, next){},
     async delete(req, res, next){}
 
