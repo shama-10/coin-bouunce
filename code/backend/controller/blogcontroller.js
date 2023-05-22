@@ -18,7 +18,7 @@ const blogController = {
         //photos path in db.....
         const createBlogSchema = Joi.object({
             title: Joi.string().required(),
-            aurthor: Joi.string(mongodbIdPattern).regex.required(),
+            author: Joi.string().regex(mongodbIdPattern).required(),
             content: Joi.string().required(),
             photo: Joi.string().required()
         });
@@ -28,14 +28,14 @@ const blogController = {
             return next(error);
         }
 
-        const {title, aurthor, content, photo} = req.body;
+        const {title, author, content, photo} = req.body;
 
         //handling photo
         //read as a nuffer
         const buffer = Buffer.from(photo.replace(/^data:image\/(png|jpg|jpeg);base64,/,''), 'base64');
         
         //alot a random name
-        const imagePath = `${Date.now()}-${aurthor}.png`;
+        const imagePath = `${Date.now()}-${author}.png`;
         //save locally
 
         try{
@@ -50,7 +50,7 @@ const blogController = {
         try {
             newBlog = new Blog({
                 title,
-                aurthor,
+                author,
                 content,
                 photoPath: `${BACKEND_SERVER_PATH}/storage/${imagePath}`
             });
@@ -61,14 +61,30 @@ const blogController = {
             return next(error);
         }
 
-        const blogDto = new
-        res.status(201).json({blog});
+        const blogDto = new BlogDTO(newBlog)
+        return  res.status(201).json({blog: blogDto});
     },
     
     
     
     
-    async getAll(req, res, next){},
+    async getAll(req, res, next){
+
+        try{
+            const blogs = await Blog.find({});
+
+            const blogsDto = [];
+
+            for(i=0; i < blogs.length; i++){
+                const dto = new BlogDTO(blogs[i]);
+                blogsDto.push(dto);
+            }
+            return res.status(200).json({blogs: blogsDto});
+        }
+        catch(error){
+            return next(error);
+        }
+    },
     async getById(req, res, next){},
     async update(req, res, next){},
     async delete(req, res, next){}
