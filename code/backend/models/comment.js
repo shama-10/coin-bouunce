@@ -4,8 +4,8 @@ const {Schema} = mongoose;
 
 const commentSchema = new Schema({
     content : {type: String, required:true},
-    blog : {type: mongoose.SchemaTypes.ObjectId, ref: 'blogs'},
-    aurthor : {type: mongoose.SchemaTypes.ObjectId, ref: 'users'}
+    blog : {type: mongoose.SchemaTypes.ObjectId, ref: 'Blog'},
+    aurthor : {type: mongoose.SchemaTypes.ObjectId, ref: 'User'}
 },
 {timestamps: true}
 );
