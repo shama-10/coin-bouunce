@@ -32,19 +32,7 @@ const blogController = {
         const {title, author, content, photo} = req.body;
 
         //handling photo
-        //read as a nuffer
-        const buffer = Buffer.from(photo.replace(/^data:image\/(png|jpg|jpeg);base64,/,''), 'base64');
-        
-        //alot a random name
-        const imagePath = `${Date.now()}-${author}.png`;
-        //save locally
-
-        try{
-            fs.writeFileSync(`storage/${imagePath}`, buffer)
-        }
-        catch(error){
-            return next(error);
-        }
+         
 
         //save blog in DB
         let newBlog;
@@ -114,12 +102,81 @@ const blogController = {
         const blogDto = new BlogDetailsDTO(blog);
 
         return res.status(200).json({blog: blogDto})
-        
+          
 
     },
 
-    async update(req, res, next){},
-    async delete(req, res, next){}
+    async update(req, res, next){
+        //validate
+
+        const updateBlogSchema = Joi.object({
+            title: Joi.string().required(),
+            content: Joi.string().required(),
+            author: Joi.string().regex(mongodbIdPattern).required(),
+            blogId: Joi.string().regex(mongodbIdPattern).required(),
+            photo: Joi.string().required()
+        });
+
+        const{error} = updateBlogSchema.validate(req.body);
+
+        const {title, content, author, blogId, photo} = req.body;
+
+        //delete previous photo
+        // save new photo
+
+        let blog;
+
+        try
+        {
+        blog = await Blog.findOne({_id: blogId});
+        }
+        catch(error){
+            return next(error);
+        }
+
+        if(photo)
+        {
+           let previousPhoto = blog.photoPath;
+
+           previousPhoto = previousPhoto.split('/').at(-1); //
+
+           //delete Photo
+
+           fs.unlinkSync(`storage/${previousPhoto}`);
+
+           //read as a buffer
+            const buffer = Buffer.from(photo.replace(/^data:image\/(png|jpg|jpeg);base64,/,''), 'base64');
+            
+            //alot a random name
+            const imagePath = `${Date.now()}-${author}.png`;
+            //save locally
+
+            try
+            {
+                fs.writeFileSync(`storage/${imagePath}`, buffer)
+            }
+            catch(error)
+            {
+                return next(error);
+            }
+
+            await Blog.updateOne({_id: blogId},
+                {title, content, photoPath: `${BACKEND_SERVER_PATH}/STORAGE/${imagePath}`}
+                );
+        }
+        else
+        {
+            await Blog.updateOne({_id: blogId}, {title, content});
+        }
+        return res.status(200).json({message: 'blog updated!'});
+
+    },
+    async delete(req, res, next){
+        //validate id
+        //delete blog
+        //delete comments on this blog
+        
+    }
 
 
 }

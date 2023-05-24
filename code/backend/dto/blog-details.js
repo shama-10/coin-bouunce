@@ -11,3 +11,4 @@ class BlogDetailsDTO{
 
     }
 }
+module.exports = BlogDetailsDTO;
