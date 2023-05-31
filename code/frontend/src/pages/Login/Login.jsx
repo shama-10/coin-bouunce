@@ -32,7 +32,7 @@ function Login() {
       navigate("/");
     } else if (response.code === "ERR_BAD_REQUEST") {
       //display error message
-      setError(response.response.data.errormessage);
+      setError(response.response.data.message);
     }
   };
 
@@ -66,7 +66,14 @@ function Login() {
         error={errors.password && touched.password ? 1 : undefined}
         errormessage={errors.password}
       />
-      <button className={styles.logInButton} onClick={handleLogin}>
+      <button className={styles.logInButton} onClick={handleLogin}
+      disabled = {
+        !values.username ||
+          !values.password ||
+          errors.username ||
+          errors.password
+      }
+      >
         Login
       </button>
       <span>

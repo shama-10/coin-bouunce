@@ -7,11 +7,11 @@ import Protected from "./components/Protected/Protected";
 import Error from "./pages/Error/Error";
 import Login from "./pages/Login/Login";
 import { useSelector } from "react-redux";
+import Signup from "./pages/Signup/Signup";
 function App() {
-  
   const isAuth = useSelector((state) => state.user.auth);
-  
-    return (
+
+  return (
     <div className={styles.container}>
       <BrowserRouter>
         <div className={styles.layout}>
@@ -35,31 +35,47 @@ function App() {
               path="blogs"
               exact
               element={
-              <Protected isAuth={isAuth}><div className={styles.main}>Blogs Page </div></Protected>}
+                <Protected isAuth={isAuth}>
+                  <div className={styles.main}>Blogs Page </div>
+                </Protected>
+              }
             />
             <Route
               path="submit"
               exact
               element={
-              <Protected isAuth={isAuth}>
-              <div className={styles.main}>Submit Blogs</div></Protected>}
+                <Protected isAuth={isAuth}>
+                  <div className={styles.main}>Submit Blogs</div>
+                </Protected>
+              }
             />
             <Route
               path="login"
               exact
-              element={<div className={styles.main}><Login /></div>}
+              element={
+                <div className={styles.main}>
+                  <Login />
+                </div>
+              }
             />
             <Route
               path="signup"
               exact
-              element={<div className={styles.main}>Sign Up</div>}
+              element={
+                <div className={styles.main}>
+                  <Signup />
+                </div>
+              }
             />
             <Route
               path="*"
               exact
-              element={<div className={styles.main}><Error /></div>}
+              element={
+                <div className={styles.main}>
+                  <Error />
+                </div>
+              }
             />
-
           </Routes>
           <Footer />
         </div>
