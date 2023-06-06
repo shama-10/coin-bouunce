@@ -2,6 +2,7 @@ import Navbar from "./components/Navbar/Navbar";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Footer from "./components/Footer/Footer";
 import Home from "./pages/Home/Home";
+import Crypto from "./pages/Crypto/Crypto";
 import styles from "./App.module.css";
 import Protected from "./components/Protected/Protected";
 import Error from "./pages/Error/Error";
@@ -29,7 +30,7 @@ function App() {
             <Route
               path="crypto"
               exact
-              element={<div className={styles.main}>Crypto Page </div>}
+              element={<div className={styles.main}><Crypto /></div>}
             />
             <Route
               path="blogs"
